@@ -3,6 +3,7 @@ from natural_language_processing import feature_extraction
 import os
 import numpy as np
 np.set_printoptions(threshold=np.nan)
+from model import linear_svr
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/"
 
@@ -29,5 +30,6 @@ if __name__ == '__main__':
     X_test = np.array(feature_extraction.bag_of_words(contents_test))
     labels_test = np.array(labels_test)
 
-    print(X_test.shape)
-    print(labels_test.shape)
+    est = linear_svr.Classifier(features_train=X_train, features_test=X_test, labels_train=labels_train,
+                     labels_test=labels_test)
+    est.training()
