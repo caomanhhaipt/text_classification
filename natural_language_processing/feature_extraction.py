@@ -14,15 +14,15 @@ class FeatureExtraction(object):
         self.data = data
         self.path = path
 
-    def filter_extremes(self, no_below, no_above):
+    def filter_extremes(self):
         total_text = len(self.data)
         item_remove = []
         for item in self.dict:
-            if self.dict[item] < NO_BELOW or (self.dict[item]*1.0)/total_text > NO_ABOVE:
+            if self.dict[item] < float(NO_BELOW) or (self.dict[item]*1.0)/total_text > float(NO_ABOVE):
                 item_remove.append(item)
 
         for item in item_remove:
-            print (item)
+            # print (item)
             self.dict.pop(item, None)
 
     def build_dictionary(self):
@@ -41,7 +41,7 @@ class FeatureExtraction(object):
             for item in tmp_dict:
                 self.dict[item] += 1
 
-        self.filter_extremes(no_below, no_above)
+        self.filter_extremes()
         i = 0
         for item in self.dict:
             tmp = str(i) + '\t' + str(item) + '\t' + str(self.dict[item]) + '\n'
