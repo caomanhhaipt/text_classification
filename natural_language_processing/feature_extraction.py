@@ -68,7 +68,7 @@ class FeatureExtraction(object):
     def bag_of_words(self, contents):
         # print (self.dict)
         X_train = []
-        print (contents)
+        # print (contents)
         for words in contents:
             tmp = np.zeros(self.len_dict).astype(float)
             for word in words:
