@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from config import config_parser
+import math
 
 DIR_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir)) + "/"
 con = config_parser.Config(DIR_PATH + "config/settings.ini")
@@ -65,13 +66,44 @@ class FeatureExtraction(object):
                 self.dict[tmp[1]] = tmp[0]
 
     def bag_of_words(self, contents):
+        # print (self.dict)
         X_train = []
+        print (contents)
         for words in contents:
-            tmp = np.zeros(self.len_dict).astype(int)
+            tmp = np.zeros(self.len_dict).astype(float)
             for word in words:
                 if word in self.dict:
                     # print (word)
-                    tmp[int(self.dict[word])] += 1
+                    tmp[int(self.dict[word])] += 1.0
+            X_train.append(tmp)
+
+        return X_train
+
+    def tf_idf(self, contents):
+        X_train = []
+
+        for words in contents:
+            tmp = np.zeros(self.len_dict).astype(float)
+
+            for key in self.dict:
+                #tf
+                f = len(np.where(np.array(words)==key)[0])
+                if f == 0:
+                    continue
+
+                tf = 1.0*f/len(words)
+
+                #idf
+                count = 0
+                for item in contents:
+                    if len(np.where(np.array(item)==key)[0]) != 0:
+                        count += 1
+
+                idf = math.log(1.0*len(self.data)/count)
+
+                #tf_idf
+                tmp[int(self.dict[key])] = tf*idf
+
             X_train.append(tmp)
 
         return X_train
