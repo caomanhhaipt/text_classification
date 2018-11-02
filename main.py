@@ -4,7 +4,7 @@ import os
 import numpy as np
 np.set_printoptions(threshold=np.nan)
 from model import multi_SVM
-from utils import preprocessing_utils
+# from utils import preprocessing_utils
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/"
 
@@ -23,15 +23,24 @@ if __name__ == '__main__':
 
     #tf_idf
     # X_train = np.array(feature_extraction.tf_idf(contents_train))
-    labels_train = np.array(labels_train).astype(int)
-
-    print(X_train.shape)
-    print(labels_train.shape)
+    y_train = np.array(labels_train).astype(int)
 
     #split data
-    X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.1)
+    # X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.1)
     print(X_train.shape)
     print(y_train.shape)
+
+    # Validation data
+    data_loader.data_path = DIR_PATH + 'data/data_validation/'
+    contents_val, labels_val = data_loader.get_data_and_label()
+
+    # bag of words
+    X_val = np.array(feature_extraction.bag_of_words(contents_val))
+
+    # tf_idf
+    # X_val = np.array(feature_extraction.tf_idf(contents_val))
+    y_val = np.array(labels_val).astype(int)
+
     print (X_val.shape)
     print (y_val.shape)
 
