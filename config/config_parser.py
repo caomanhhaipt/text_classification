@@ -10,8 +10,8 @@ class Config(object):
         config = configparser.ConfigParser()
 
         config['nlp'] = {'no_below': 2, 'no_above': 0.15}
-        config['labels'] = {'chinh_tri_xa_hoi':1, 'doi_song':2, 'khoa_hoc':3, 'kinh_doanh':4, 'phap_luat':5,
-          'suc_khoe':6, 'the_gioi':7, 'the_thao':8, 'van_hoa':9, 'vi_tinh':10}
+        config['labels'] = {'chinh_tri_xa_hoi':0, 'doi_song':1, 'khoa_hoc':2, 'kinh_doanh':3, 'phap_luat':4,
+          'suc_khoe':5, 'the_gioi':6, 'the_thao':7, 'van_hoa':8, 'vi_tinh':9}
 
         config.write(open(self.path, 'w'))
 
