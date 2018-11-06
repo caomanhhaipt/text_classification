@@ -1,7 +1,7 @@
 import numpy as np
 
 class MultiSVM(object):
-    def __init__(self, X_train, y_train, batch_size=50, num_iters=4, print_every=1):
+    def __init__(self, X_train, y_train, batch_size=1000, num_iters=50, print_every=10):
         self.X_train = X_train
         self.y_train = y_train
         self.batch_size = batch_size
@@ -58,7 +58,10 @@ class MultiSVM(object):
                 self.W -= lr * dw
 
             if it % self.print_every == 0 and it > 0:
-                print('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
+                with open("test.log", "a") as m_file:
+                    m_file.write('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
+                    m_file.write('\n')
+                # print('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
 
         return loss_history
 
@@ -70,7 +73,7 @@ class MultiSVM(object):
     def evaluate(self, X, y):
         X = np.concatenate((X, np.ones((X.shape[0], 1))), axis=1)
         y_pred = self.predict(X)
-        print (100*np.mean(y_pred == y))
+        # print (100*np.mean(y_pred == y))
         i = 0
         count_true = 0
         for item in y:
@@ -78,4 +81,10 @@ class MultiSVM(object):
                 count_true += 1
             i += 1
 
-        print ("True/Total: " + str(count_true) + "/" + str(len(y)))
+        with open("test.log", "a") as m_file:
+            m_file.write("True/Total: " + str(count_true) + "/" + str(len(y)))
+            m_file.write('\n')
+        # print ("True/Total: " + str(count_true) + "/" + str(len(y)))
+
+    def save_weight_as_txt(self, path):
+        np.savetxt(path, self.W)
