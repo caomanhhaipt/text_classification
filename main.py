@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     #split data
     X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.2)
-    with open("test.log", "a") as m_file:
+    with open(DIR_PATH + "test.log", "a") as m_file:
         m_file.write('Train data:')
         m_file.write(str(X_train.shape))
         m_file.write(str(y_train.shape))
@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
     # print (X_val.shape)
     # print (y_val.shape)
-    with open("test.log", "a") as m_file:
+    with open(DIR_PATH + "test.log", "a") as m_file:
         m_file.write('Validation data:')
         m_file.write(str(X_val.shape))
         m_file.write(str(y_val.shape))
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # X_test = np.array(feature_extraction.tf_idf(contents_test))
     y_test = np.array(labels_test).astype(int)
 
-    with open("test.log", "a") as m_file:
+    with open(DIR_PATH + "test.log", "a") as m_file:
         m_file.write('Test data:')
         m_file.write(str(X_test.shape))
         m_file.write(str(y_test.shape))
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     #Train model
     model = multi_SVM.MultiSVM(X_train=X_train, y_train=y_train)
-    model.build_model()
-    model.evaluate(X_test, y_test)
-    model.evaluate(X_val, y_val)
+    model.build_model(path=DIR_PATH)
+    model.evaluate(X_test, y_test, DIR_PATH)
+    model.evaluate(X_val, y_val, DIR_PATH)
     model.save_weight_as_txt('w.txt')

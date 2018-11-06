@@ -37,7 +37,8 @@ class MultiSVM(object):
         dW = X.T.dot(F) / N + reg * W
         return loss, dW
 
-    def build_model(self, reg=0.1, lr=0.1):
+    def build_model(self, reg=0.1, lr=0.1, path=None):
+        print (path)
         self.bias_trick()
         self.W = self.W_init
         loss_history = []
@@ -58,7 +59,7 @@ class MultiSVM(object):
                 self.W -= lr * dw
 
             if it % self.print_every == 0 and it > 0:
-                with open("test.log", "a") as m_file:
+                with open(path + "test.log", "a") as m_file:
                     m_file.write('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
                     m_file.write('\n')
                 # print('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
@@ -70,7 +71,7 @@ class MultiSVM(object):
 
         return np.argmax(Z, axis=1)
 
-    def evaluate(self, X, y):
+    def evaluate(self, X, y, path=None):
         X = np.concatenate((X, np.ones((X.shape[0], 1))), axis=1)
         y_pred = self.predict(X)
         # print (100*np.mean(y_pred == y))
@@ -81,7 +82,7 @@ class MultiSVM(object):
                 count_true += 1
             i += 1
 
-        with open("test.log", "a") as m_file:
+        with open(path + "test.log", "a") as m_file:
             m_file.write("True/Total: " + str(count_true) + "/" + str(len(y)))
             m_file.write('\n')
         # print ("True/Total: " + str(count_true) + "/" + str(len(y)))
