@@ -76,4 +76,4 @@ if __name__ == '__main__':
     model.build_model(path=DIR_PATH)
     model.evaluate(X_test, y_test, DIR_PATH)
     model.evaluate(X_val, y_val, DIR_PATH)
-    model.save_weight_as_txt('w.txt')
+    model.save_weight_as_txt(DIR_PATH + 'w.txt')
