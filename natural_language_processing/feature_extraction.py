@@ -65,9 +65,9 @@ class FeatureExtraction(object):
                 self.len_dict += 1
                 self.dict[tmp[1]] = tmp[0]
 
-    def bag_of_words(self, contents):
+    def mini_bag_of_words(self, contents):
         # print (self.dict)
-        X_train = []
+        X = []
         # print (contents)
         for words in contents:
             tmp = np.zeros(self.len_dict).astype(float)
@@ -75,9 +75,25 @@ class FeatureExtraction(object):
                 if word in self.dict:
                     # print (word)
                     tmp[int(self.dict[word])] += 1.0
-            X_train.append(tmp)
+            X.append(tmp)
 
-        return X_train
+        return X
+
+    def bag_of_words(self, contents, batch_size):
+        n_batches = int(np.ceil(np.array(contents).shape[0] / float(batch_size)))
+
+        X = None
+        for ib in range(n_batches):
+            # print(ib)
+            last_id = min(batch_size * (ib + 1), np.array(contents).shape[0])
+            contents_batch = contents[batch_size * ib: last_id]
+            tmp = np.array(self.mini_bag_of_words(contents_batch))
+            if ib == 0:
+                X = tmp
+            else:
+                X = np.concatenate((X, tmp), axis=0)
+
+        return X
 
     def tf_idf(self, contents):
         X_train = []
