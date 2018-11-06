@@ -39,8 +39,8 @@ if __name__ == '__main__':
     # X_train = np.array(X_train)
     labels_train = np.array(labels_train).astype(int)
 
-    print (X_train.shape)
-    print (labels_train.shape)
+    # print (X_train.shape)
+    # print (labels_train.shape)
 
     #tf_idf
     # X_train = np.array(feature_extraction.tf_idf(contents_train))
@@ -48,11 +48,11 @@ if __name__ == '__main__':
 
     # split data
     X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.2)
-    # with open(DIR_PATH + "test.log", "a") as m_file:
-    #     m_file.write('Train data:')
-    #     m_file.write(str(X_train.shape))
-    #     m_file.write(str(y_train.shape))
-    #     m_file.write('\n')
+    with open(DIR_PATH + "test.log", "a") as m_file:
+        m_file.write('Train data:')
+        m_file.write(str(X_train.shape))
+        m_file.write(str(y_train.shape))
+        m_file.write('\n')
     # # print(X_train.shape)
     # # print(y_train.shape)
     #
@@ -69,11 +69,11 @@ if __name__ == '__main__':
     #
     # # print (X_val.shape)
     # # print (y_val.shape)
-    # with open(DIR_PATH + "test.log", "a") as m_file:
-    #     m_file.write('Validation data:')
-    #     m_file.write(str(X_val.shape))
-    #     m_file.write(str(y_val.shape))
-    #     m_file.write('\n')
+    with open(DIR_PATH + "test.log", "a") as m_file:
+        m_file.write('Validation data:')
+        m_file.write(str(X_val.shape))
+        m_file.write(str(y_val.shape))
+        m_file.write('\n')
     #Test data
     data_loader.data_path = DIR_PATH + 'data/data_test/'
     contents_test, labels_test = data_loader.get_data_and_label()
@@ -85,14 +85,14 @@ if __name__ == '__main__':
     # # X_test = np.array(feature_extraction.tf_idf(contents_test))
     y_test = np.array(labels_test).astype(int)
 
-    print(X_test.shape)
-    print(y_test.shape)
+    # print(X_test.shape)
+    # print(y_test.shape)
     #
-    # with open(DIR_PATH + "test.log", "a") as m_file:
-    #     m_file.write('Test data:')
-    #     m_file.write(str(X_test.shape))
-    #     m_file.write(str(y_test.shape))
-    #     m_file.write('\n')
+    with open(DIR_PATH + "test.log", "a") as m_file:
+        m_file.write('Test data:')
+        m_file.write(str(X_test.shape))
+        m_file.write(str(y_test.shape))
+        m_file.write('\n')
 
     #Train model
     model = multi_SVM.MultiSVM(X_train=X_train, y_train=y_train)
