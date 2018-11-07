@@ -38,7 +38,7 @@ class MultiSVM(object):
         return loss, dW
 
     def build_model(self, reg=0.1, lr=0.1, path=None):
-        print (path)
+        # print (path)
         self.bias_trick()
         self.W = self.W_init
         loss_history = []

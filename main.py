@@ -14,8 +14,10 @@ if __name__ == '__main__':
     data_loader = data_loader.DataLoader(DIR_PATH + 'data/data_train/')
     contents_train, labels_train = data_loader.get_data_and_label()
 
+    X_train, y_train, X_val, y_val = preprocessing_utils.split_data(np.array(contents_train),
+                                                                    np.array(labels_train), 0.2)
     #Load dictionary
-    feature_extraction = feature_extraction.FeatureExtraction(contents_train, DIR_PATH + 'config/dictionary.txt')
+    feature_extraction = feature_extraction.FeatureExtraction(X_train, DIR_PATH + 'config/dictionary.txt')
     feature_extraction.load_dictionary()
 
     # n_batches = int(np.ceil(np.array(contents_train).shape[0] / float(2000.0)))
@@ -33,8 +35,11 @@ if __name__ == '__main__':
     #     else:
     #         X_train = np.concatenate((X_train, tmp), axis=0)
 
-    X_train = feature_extraction.bag_of_words(contents_train, 1000)
+    X_train = feature_extraction.bag_of_words(X_train, 1000)
+    X_val = feature_extraction.bag_of_words(X_val, 1000)
 
+    y_train = y_train.astype(int)
+    y_val = y_val.astype(int)
     #bag of words
     # X_train = np.array(X_train)
     labels_train = np.array(labels_train).astype(int)
@@ -47,7 +52,7 @@ if __name__ == '__main__':
     # y_train = np.array(labels_train).astype(int)
 
     # split data
-    X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.2)
+    # X_train, y_train, X_val, y_val = preprocessing_utils.split_data(X_train, labels_train, 0.2)
     with open(DIR_PATH + "test.log", "a") as m_file:
         m_file.write('Train data:')
         m_file.write(str(X_train.shape))
@@ -97,6 +102,7 @@ if __name__ == '__main__':
     #Train model
     model = multi_SVM.MultiSVM(X_train=X_train, y_train=y_train)
     model.build_model(path=DIR_PATH)
+    print (1)
     model.evaluate(X_test, y_test, DIR_PATH)
     model.evaluate(X_val, y_val, DIR_PATH)
     # model.save_weight_as_txt(DIR_PATH + 'w.txt')
