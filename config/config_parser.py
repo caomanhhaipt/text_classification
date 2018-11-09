@@ -9,7 +9,7 @@ class Config(object):
     def create_config(self):
         config = configparser.ConfigParser()
 
-        config['nlp'] = {'no_below': 100, 'no_above': 0.3}
+        config['nlp'] = {'no_below': 50, 'no_above': 0.3}
         config['labels'] = {'chinh_tri_xa_hoi':0, 'doi_song':1, 'khoa_hoc':2, 'kinh_doanh':3, 'phap_luat':4,
           'suc_khoe':5, 'the_gioi':6, 'the_thao':7, 'van_hoa':8, 'vi_tinh':9}
 
