@@ -65,7 +65,7 @@ class FeatureExtraction(object):
                 self.len_dict += 1
                 self.dict[tmp[1]] = tmp[0]
 
-    def mini_bag_of_words(self, contents):
+    def bag_of_words(self, contents):
         # print (self.dict)
         X = []
         # print (contents)
@@ -79,7 +79,7 @@ class FeatureExtraction(object):
 
         return X
 
-    def bag_of_words(self, contents, batch_size):
+    def mini_batch_bag_of_words(self, contents, batch_size):
         n_batches = int(np.ceil(np.array(contents).shape[0] / float(batch_size)))
 
         X = None
@@ -87,7 +87,7 @@ class FeatureExtraction(object):
             # print(ib)
             last_id = min(batch_size * (ib + 1), np.array(contents).shape[0])
             contents_batch = contents[batch_size * ib: last_id]
-            tmp = np.array(self.mini_bag_of_words(contents_batch))
+            tmp = np.array(self.bag_of_words(contents_batch))
             if ib == 0:
                 X = tmp
             else:
@@ -96,9 +96,11 @@ class FeatureExtraction(object):
         return X
 
     def tf_idf(self, contents):
-        X_train = []
-
+        X = []
+        # a =  len(contents)
+        # i = 0
         for words in contents:
+            # print (str(i) + '/' + str(a))
             tmp = np.zeros(self.len_dict).astype(float)
 
             for key in self.dict:
@@ -120,6 +122,24 @@ class FeatureExtraction(object):
                 #tf_idf
                 tmp[int(self.dict[key])] = tf*idf
 
-            X_train.append(tmp)
+            X.append(tmp)
 
-        return X_train
+            # i += 1
+
+        return X
+
+    def mini_batch_tf_idf(self, contents, batch_size):
+        n_batches = int(np.ceil(np.array(contents).shape[0] / float(batch_size)))
+
+        X = None
+        for ib in range(n_batches):
+            # print(ib)
+            last_id = min(batch_size * (ib + 1), np.array(contents).shape[0])
+            contents_batch = contents[batch_size * ib: last_id]
+            tmp = np.array(self.tf_idf(contents_batch))
+            if ib == 0:
+                X = tmp
+            else:
+                X = np.concatenate((X, tmp), axis=0)
+
+        return X

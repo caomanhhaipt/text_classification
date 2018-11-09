@@ -35,8 +35,8 @@ if __name__ == '__main__':
     #     else:
     #         X_train = np.concatenate((X_train, tmp), axis=0)
 
-    X_train = feature_extraction.bag_of_words(X_train, 1000)
-    X_val = feature_extraction.bag_of_words(X_val, 1000)
+    # X_train = feature_extraction.mini_batch_bag_of_words(X_train, 1000)
+    # X_val = feature_extraction.mini_batch_bag_of_words(X_val, 1000)
 
     y_train = y_train.astype(int)
     y_val = y_val.astype(int)
@@ -48,7 +48,21 @@ if __name__ == '__main__':
     # print (labels_train.shape)
 
     #tf_idf
-    # X_train = np.array(feature_extraction.tf_idf(contents_train))
+    # X_train = feature_extraction.mini_batch_tf_idf(X_train, 1000)
+    # X_val = feature_extraction.mini_batch_tf_idf(X_val, 1000)
+
+    if not os.path.exists(DIR_PATH + 'tf_idf_train.npy'):
+        X_train = feature_extraction.mini_batch_tf_idf(X_train, 1000)
+        np.save(DIR_PATH + 'tf_idf_train.npy', X_train)
+    else:
+        X_train = np.load(DIR_PATH + 'tf_idf_train.npy')
+
+    if not os.path.exists(DIR_PATH + 'tf_idf_val.npy'):
+        X_val = feature_extraction.mini_batch_tf_idf(X_val, 1000)
+        np.save(DIR_PATH + 'tf_idf_val.npy', X_val)
+    else:
+        X_val = np.load(DIR_PATH + 'tf_idf_val.npy')
+
     # y_train = np.array(labels_train).astype(int)
 
     # split data
@@ -84,10 +98,16 @@ if __name__ == '__main__':
     contents_test, labels_test = data_loader.get_data_and_label()
     #
     # #bag of words
-    X_test = feature_extraction.bag_of_words(contents_test, 1000)
+    # X_test = feature_extraction.mini_batch_bag_of_words(contents_test, 1000)
     #
     # #tf_idf
     # # X_test = np.array(feature_extraction.tf_idf(contents_test))
+    if not os.path.exists(DIR_PATH + 'tf_idf_test.npy'):
+        X_test = feature_extraction.mini_batch_tf_idf(contents_test, 1000)
+        np.save(DIR_PATH + 'tf_idf_test.npy', X_test)
+    else:
+        X_test = np.load(DIR_PATH + 'tf_idf_test.npy')
+    # X_test = feature_extraction.mini_batch_tf_idf(contents_test, 1000)
     y_test = np.array(labels_test).astype(int)
 
     # print(X_test.shape)
@@ -102,7 +122,7 @@ if __name__ == '__main__':
     #Train model
     model = multi_SVM.MultiSVM(X_train=X_train, y_train=y_train)
     model.build_model(path=DIR_PATH)
-    print (1)
+    # print (1)
     model.evaluate(X_test, y_test, DIR_PATH)
     model.evaluate(X_val, y_val, DIR_PATH)
     # model.save_weight_as_txt(DIR_PATH + 'w.txt')
