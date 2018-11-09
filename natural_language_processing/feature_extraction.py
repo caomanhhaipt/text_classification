@@ -27,6 +27,7 @@ class FeatureExtraction(object):
             self.dict.pop(item, None)
 
     def build_dictionary(self):
+        print ('building dictionary')
         self.dict = {}
         for words in self.data:
             for word in words:
@@ -50,20 +51,28 @@ class FeatureExtraction(object):
                 file.write(tmp)
             i += 1
 
+        print('finish build dictionary')
+
     def load_dictionary(self):
-        if not os.path.exists(self.path):
-            self.build_dictionary()
+        if os.path.exists(self.path):
+            os.remove(self.path)
+
+        self.build_dictionary()
 
         with open(self.path, 'r') as file:
             a = file.read().split('\n')
 
         self.len_dict = 0
         self.dict = {}
+        self.dict_number = {}
         for item in a:
             tmp = item.split('\t')
             if tmp != ['']:
                 self.len_dict += 1
                 self.dict[tmp[1]] = tmp[0]
+                self.dict_number[tmp[1]] = tmp[2]
+
+        print ('finish load dictionary')
 
     def bag_of_words(self, contents):
         # print (self.dict)
@@ -97,10 +106,10 @@ class FeatureExtraction(object):
 
     def tf_idf(self, contents):
         X = []
-        # a =  len(contents)
-        # i = 0
+        a =  len(contents)
+        i = 0
         for words in contents:
-            # print (str(i) + '/' + str(a))
+            print (str(i) + '/' + str(a))
             tmp = np.zeros(self.len_dict).astype(float)
 
             for key in self.dict:
@@ -112,23 +121,24 @@ class FeatureExtraction(object):
                 tf = 1.0*f/len(words)
 
                 #idf
-                count = 0
-                for item in contents:
-                    if len(np.where(np.array(item)==key)[0]) != 0:
-                        count += 1
-
-                idf = math.log(1.0*len(self.data)/count)
+                # count = 0
+                # for item in contents:
+                #     if len(np.where(np.array(item)==key)[0]) != 0:
+                #         count += 1
+                # print (str(count) + ':' + str(self.dict_number[key]))
+                idf = math.log10(1.0*len(self.data)/float(self.dict_number[key]))
 
                 #tf_idf
                 tmp[int(self.dict[key])] = tf*idf
 
             X.append(tmp)
 
-            # i += 1
+            i += 1
 
         return X
 
     def mini_batch_tf_idf(self, contents, batch_size):
+        print ("-------------------------------------------------")
         n_batches = int(np.ceil(np.array(contents).shape[0] / float(batch_size)))
 
         X = None
