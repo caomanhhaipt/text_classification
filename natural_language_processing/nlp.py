@@ -9,6 +9,7 @@ class NLP(object):
         self.text = text
 
     def segmentation(self):
+        # print (ViTokenizer.tokenize(self.text))
         return ViTokenizer.tokenize(self.text)
 
     def set_stop_words(self):
@@ -45,10 +46,11 @@ if __name__ == '__main__':
     # file = file_reader.FileReader('/home/haicm/text_classfication/data/data_train/chinh_tri_xa_hoi/XH_NLD_ (3672).txt')
     # content = file.read()
     # print (content)
-    nlp1 = NLP(u"là một con mèo")
-    # print (nlp1.segmentation())
-    nlp1.set_stop_words()
-    # print (nlp1.stop_words)
-    # print (nlp1.segmentation())
-    # #
-    print (nlp1.get_words_feature())
+    print (u"Đại học, bách khoa hà nội 'Sinh viên đại học'")
+    nlp1 = NLP(u"Đại học, bách khoa hà nội 'Sinh viên đại học'")
+    print (nlp1.segmentation())
+    # nlp1.set_stop_words()
+    # # print (nlp1.stop_words)
+    # # print (nlp1.segmentation())
+    # # #
+    # print (nlp1.get_words_feature())
