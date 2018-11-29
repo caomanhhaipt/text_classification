@@ -106,10 +106,10 @@ class FeatureExtraction(object):
 
     def tf_idf(self, contents):
         X = []
-        a =  len(contents)
-        i = 0
+        # a =  len(contents)
+        # i = 0
         for words in contents:
-            print (str(i) + '/' + str(a))
+            # print (str(i) + '/' + str(a))
             tmp = np.zeros(self.len_dict).astype(float)
 
             for key in self.dict:
@@ -133,17 +133,19 @@ class FeatureExtraction(object):
 
             X.append(tmp)
 
-            i += 1
+            # i += 1
 
         return X
 
     def mini_batch_tf_idf(self, contents, batch_size):
-        print ("-------------------------------------------------")
+        # print ("-------------------------------------------------")
         n_batches = int(np.ceil(np.array(contents).shape[0] / float(batch_size)))
 
         X = None
+        i = 0
         for ib in range(n_batches):
             # print(ib)
+            print (i)
             last_id = min(batch_size * (ib + 1), np.array(contents).shape[0])
             contents_batch = contents[batch_size * ib: last_id]
             tmp = np.array(self.tf_idf(contents_batch))
@@ -151,5 +153,7 @@ class FeatureExtraction(object):
                 X = tmp
             else:
                 X = np.concatenate((X, tmp), axis=0)
+
+            i += 1
 
         return X
