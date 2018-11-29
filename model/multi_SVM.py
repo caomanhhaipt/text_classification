@@ -1,12 +1,15 @@
 import numpy as np
+import os
 
 class MultiSVM(object):
-    def __init__(self, X_train, y_train, batch_size=1000, num_iters=50, print_every=10):
+    def __init__(self, X_train, y_train, X_val, y_val, batch_size=1000, num_iters=50, print_every=10):
         self.X_train = X_train
         self.y_train = y_train
         self.batch_size = batch_size
         self.num_iters = num_iters
         self.print_every = print_every
+        self.X_val = X_val
+        self.y_val = y_val
 
     def bias_trick(self, C=10):
         self.X_train = np.concatenate((self.X_train, np.ones((self.X_train.shape[0], 1))), axis = 1)
@@ -37,11 +40,15 @@ class MultiSVM(object):
         dW = X.T.dot(F) / N + reg * W
         return loss, dW
 
-    def build_model(self, reg=0.1, lr=0.1, path=None):
+    def build_model(self, reg=1e-6, lr=0.02, path=None):
         # print (path)
         self.bias_trick()
         self.W = self.W_init
         loss_history = []
+        # train_loss_history = []
+        # val_loss_history = []
+        # acc_train_history = []
+        # acc_val_history = []
 
         for it in range(self.num_iters):
             ids_shuffle = np.array(range(self.X_train.shape[0]))
@@ -58,10 +65,22 @@ class MultiSVM(object):
                 loss_history.append(lossib)
                 self.W -= lr * dw
 
-            if it % self.print_every == 0 and it > 0:
-                with open(path + "test.log", "a") as m_file:
-                    m_file.write('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
-                    m_file.write('\n')
+            # val_loss, tmp = self.svm_loss(self.W, self.X_val, self.y_val, reg)
+            # val_loss_history.append(val_loss)
+            #
+            # train_loss, tmp = self.svm_loss(self.W, self.X_train, self.y_train, reg)
+            # train_loss_history.append(train_loss)
+            #
+            # acc_train = self.evaluate(self.X_train, self.y_train)
+            # acc_train_history.append(acc_train)
+            #
+            # acc_val = self.evaluate(self.X_val, self.y_val)
+            # acc_val_history.append(acc_val)
+
+            # if it % self.print_every == 0 and it > 0:
+            #     with open(path + "test.log", "a") as m_file:
+            #         m_file.write('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
+            #         m_file.write('\n')
                 # print('it % d / % d, loss = % f' % (it, self.num_iters, loss_history[it]))
 
         return loss_history
@@ -82,10 +101,20 @@ class MultiSVM(object):
                 count_true += 1
             i += 1
 
+        if path == None:
+            return float(count_true) / float(len(y))
+
         with open(path + "test.log", "a") as m_file:
             m_file.write("True/Total: " + str(count_true) + "/" + str(len(y)))
             m_file.write('\n')
         # print ("True/Total: " + str(count_true) + "/" + str(len(y)))
 
-    def save_weight_as_txt(self, path):
+        return float(count_true)/float(len(y))
+
+    def save_as_txt(self, path):
+        if not os.path.exists(path):
+            pass
+        else:
+            os.remove(path)
+
         np.savetxt(path, self.W)
